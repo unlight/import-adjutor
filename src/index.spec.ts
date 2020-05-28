@@ -1,10 +1,6 @@
-import * as library from '.';
 import assert from 'assert';
+import { getSources } from '.';
 
-it('smoke', () => {
-    assert.ok(library);
-});
-
-it('hello test', () => {
-    assert.equal(library.hello(), 'Hello world');
+it('getSources', () => {
+    const result = getSources();
 });
