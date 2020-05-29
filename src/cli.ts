@@ -51,6 +51,8 @@ export async function main() {
     });
     const files = project.getSourceFiles().map((s) => s.getFilePath());
     console.log('files', files);
+
+    // getAmbientModules
 }
 
 main();
