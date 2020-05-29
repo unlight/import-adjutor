@@ -4,6 +4,7 @@
   "description": "Parse ecmascript modules and collect names of export vars, functions, etc.",
   "main": "index.js",
   "typings": "index.ts",
+  "bin": "cli.js",
   "scripts": {
     "test": "npm run eslint && npm run tscheck && npm run test:cov",
     "test:r": "npm run mocha -- --timeout 8s src/*.spec.ts",
@@ -70,6 +71,7 @@
     "lodash.flatten": "^4.4.0",
     "material-design-iconic-font": "^2.2.0",
     "memfs": "^3.2.0",
+    "meow": "^7.0.1",
     "mocha": "^7.2.0",
     "pkg-dir": "3.X.X",
     "preact": "10.4.4",
