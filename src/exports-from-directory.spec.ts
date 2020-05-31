@@ -52,11 +52,23 @@ describe('exportsFromDirectory', () => {
     it('entry default', async () => {
         project.createSourceFile('/src/source.ts', `export default def`).saveSync();
         const result = await exportsFromDirectory({ project, directory: '/src' });
-        assert.deepStrictEqual(result, [
+        assert.strict.deepEqual(result, [
             new Entry({
                 filepath: '/src/source.ts',
                 isDefault: true,
                 name: 'def',
+            }),
+        ]);
+    });
+
+    it('typescript commonjs default export', async () => {
+        project.createSourceFile('/src/source.ts', `export = def`).saveSync();
+        const result = await exportsFromDirectory({ project, directory: '/src' });
+        assert.strict.deepEqual(result, [
+            new Entry({
+                name: 'def',
+                filepath: '/src/source.ts',
+                isDefault: true,
             }),
         ]);
     });
@@ -73,7 +85,7 @@ describe('exportsFromDirectory', () => {
             });
         });
 
-        it.only('real subdirectories', async () => {
+        it('real subdirectories', async () => {
             const result = (
                 await exportsFromDirectory({ project, directory: 'fixtures' })
             ).find((entry) =>
@@ -83,6 +95,59 @@ describe('exportsFromDirectory', () => {
             assert.equal(result.name, 'subdirectoryFile');
             assert.equal(result.isDefault, false);
             assert.equal(result.module, undefined);
+        });
+
+        it('ignore file patterns', async () => {
+            const options = {
+                fileExcludePatterns: [
+                    '*.obj',
+                    '.DS_Store',
+                    '*.db',
+                    '*.sublime-workspace',
+                    'ignored-*',
+                ],
+            };
+            const result = await exportsFromDirectory({
+                project,
+                directory: 'fixtures',
+                ...options,
+            });
+            assert.ok(
+                !result.find(
+                    (entry) =>
+                        entry.filepath && entry.filepath.endsWith('fixtures/ignored-file.ts'),
+                ),
+            );
+        });
+
+        it('ignore folders patterns', async () => {
+            const options = {
+                folderExcludePatterns: ['ignored-*', '.svn', '.git', '.hg', 'CVS'],
+            };
+            const result = await exportsFromDirectory({
+                project,
+                directory: 'fixtures',
+                ...options,
+            });
+            const sources = project.getSourceFiles().map((s) => s.getFilePath());
+            assert.ok(sources.length > 0);
+
+            assert.ok(
+                !result.find(
+                    (entry) =>
+                        entry.filepath &&
+                        entry.filepath.endsWith('ignored-directory/ignored-file.ts'),
+                ),
+                'ignored-directory should be ignored',
+            );
+
+            assert.ok(
+                !result.find(
+                    (entry) =>
+                        entry.filepath && entry.filepath.endsWith('fixtures/.svn/ignored-file.ts'),
+                ),
+                'folder equal name should be ignored',
+            );
         });
     });
 });

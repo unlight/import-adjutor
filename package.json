@@ -1,5 +1,5 @@
 {
-  "name": "esm-exports",
+  "name": "import-adjutor",
   "version": "0.0.0-dev",
   "description": "Parse ecmascript modules and collect names of export vars, functions, etc.",
   "main": "index.js",
@@ -24,7 +24,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/unlight/esm-exports.git"
+    "url": "git+https://github.com/unlight/import-adjutor.git"
   },
   "keywords": [
     "esm",
@@ -36,10 +36,13 @@
   "license": "MIT",
   "author": "2020",
   "bugs": {
-    "url": "https://github.com/unlight/esm-exports/issues"
+    "url": "https://github.com/unlight/import-adjutor/issues"
   },
-  "homepage": "https://github.com/unlight/esm-exports#readme",
-  "dependencies": {},
+  "homepage": "https://github.com/unlight/import-adjutor#readme",
+  "dependencies": {
+    "micromatch": "^4.0.2",
+    "ts-morph": "^7.1.0"
+  },
   "devDependencies": {
     "@angular/core": "^9.1.9",
     "@semantic-release/changelog": "^5.0.1",
@@ -52,6 +55,7 @@
     "@types/fs-extra": "^9.0.1",
     "@types/fs-readfile-promise": "^3.0.0",
     "@types/lodash.flatten": "^4.4.6",
+    "@types/micromatch": "^4.0.1",
     "@types/mocha": "^7.0.2",
     "@types/node": "^14.0.5",
     "@types/pkg-dir": "^2.0.1",
@@ -81,7 +85,6 @@
     "resolve": "^1.17.0",
     "rxjs": "^6.5.5",
     "semantic-release": "^17.0.8",
-    "ts-morph": "^7.1.0",
     "ts-node": "^8.10.2",
     "tslib": "^2.0.0",
     "type-zoo": "2.X.X",
