@@ -60,4 +60,29 @@ describe('exportsFromDirectory', () => {
             }),
         ]);
     });
+
+    describe('real file system', () => {
+        beforeEach(() => {
+            project = new Project({
+                compilerOptions: {
+                    esModuleInterop: true,
+                },
+                skipFileDependencyResolution: true,
+                addFilesFromTsConfig: false,
+                useInMemoryFileSystem: false,
+            });
+        });
+
+        it.only('real subdirectories', async () => {
+            const result = (
+                await exportsFromDirectory({ project, directory: 'fixtures' })
+            ).find((entry) =>
+                entry.filepath!.endsWith('fixtures/subdirectory/subdirectory-file.ts'),
+            );
+            assert(result);
+            assert.equal(result.name, 'subdirectoryFile');
+            assert.equal(result.isDefault, false);
+            assert.equal(result.module, undefined);
+        });
+    });
 });
