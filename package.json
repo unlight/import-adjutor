@@ -41,7 +41,8 @@
   "homepage": "https://github.com/unlight/import-adjutor#readme",
   "dependencies": {
     "micromatch": "^4.0.2",
-    "ts-morph": "^7.1.0"
+    "ts-morph": "^7.1.0",
+    "tslib": "^2.0.0"
   },
   "devDependencies": {
     "@angular/core": "^9.1.9",
@@ -86,7 +87,6 @@
     "rxjs": "^6.5.5",
     "semantic-release": "^17.0.8",
     "ts-node": "^8.10.2",
-    "tslib": "^2.0.0",
     "type-zoo": "2.X.X",
     "typescript": "^3.9.3",
     "watchexec-bin": "^1.0.0"
