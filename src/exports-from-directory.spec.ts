@@ -86,9 +86,7 @@ describe('exportsFromDirectory', () => {
         });
 
         it('real subdirectories', async () => {
-            const result = (
-                await exportsFromDirectory({ project, directory: 'fixtures' })
-            ).find((entry) =>
+            const result = (await exportsFromDirectory({ directory: 'fixtures' })).find((entry) =>
                 entry.filepath!.endsWith('fixtures/subdirectory/subdirectory-file.ts'),
             );
             assert(result);
@@ -125,12 +123,9 @@ describe('exportsFromDirectory', () => {
                 folderExcludePatterns: ['ignored-*', '.svn', '.git', '.hg', 'CVS'],
             };
             const result = await exportsFromDirectory({
-                project,
                 directory: 'fixtures',
                 ...options,
             });
-            const sources = project.getSourceFiles().map((s) => s.getFilePath());
-            assert.ok(sources.length > 0);
 
             assert.ok(
                 !result.find(
