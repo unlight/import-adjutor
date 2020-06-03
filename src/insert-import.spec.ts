@@ -1,7 +1,7 @@
 import assert from 'assert';
 import { insertImport } from './insert-import';
 
-describe.only('insert import', () => {
+describe('insert import', () => {
     it('new import statement', () => {
         const result = insertImport({
             sourceFileContent: ``,
@@ -58,14 +58,14 @@ describe.only('insert import', () => {
         assert.equal(result, `import { rename } from 'fs';\n`);
     });
 
-    // it.only('multiple string import', () => {
-    //     const result = insertImport({
-    //         sourceFileContent: `import {copy,\njoin,\nkill} from 'fs';\n`,
-    //         declaration: {
-    //             name: 'copy',
-    //             specifier: 'fs',
-    //         },
-    //     });
-    //     assert.equal(result, `import fs, { sync } from 'fs';\n`);
-    // });
+    it('multiple string import', () => {
+        const result = insertImport({
+            sourceFileContent: `import { copy,\nrename } from 'fs';\n`,
+            declaration: {
+                name: 'sync',
+                specifier: 'fs',
+            },
+        });
+        assert.equal(result, `import { copy,\nrename, sync } from 'fs';\n`);
+    });
 });
