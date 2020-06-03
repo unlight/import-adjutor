@@ -12,8 +12,9 @@ module.exports = {
             jsx: false,
         },
         project: 'tsconfig.json',
+        warnOnUnsupportedTypeScriptVersion: false,
     },
-    plugins: ['unicorn', 'import'],
+    plugins: ['unicorn', 'import', 'only-warn'],
     rules: {
         'no-undef': 0,
         'no-unused-vars': 0,

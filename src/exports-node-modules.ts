@@ -1,6 +1,7 @@
-import { Project } from 'ts-morph';
+import { Project, Symbol } from 'ts-morph';
 import { createProject } from './create-project';
 import { Entry } from './entry';
+import { basename } from 'path';
 
 type Arguments = {
     directory: string;
@@ -8,10 +9,6 @@ type Arguments = {
     folderExcludePatterns?: string[];
     fileExcludePatterns?: string[];
 };
-/**
- * Get all
- * @param {Arguments} {    directory,    project,    folderExcludePatterns,    fileExcludePatterns,} [description]
- */
 export async function exportsNodeModules({
     directory,
     project,
@@ -24,15 +21,30 @@ export async function exportsNodeModules({
     const typeChecker = program.getTypeChecker();
     const result: Entry[] = [];
     const fs = project.getFileSystem();
-
-    let nodeModules: string[] = project
-        .getAmbientModules()
-        .map((s) => s.getName().replace(/["']/g, ''));
-
+    let nodeModules: string[] = project.getAmbientModules().map(getName);
     if (await fs.fileExists(`${directory}/package.json`)) {
         const { dependencies, devDependencies } = JSON.parse(
             await fs.readFile(`${directory}/package.json`),
         );
+        const nodeModulesExists = await fs.directoryExists(`${directory}/node_modules`);
+        for (let name of Object.keys({ ...dependencies, ...devDependencies })) {
+            if (name.startsWith('@types/')) {
+                continue;
+            }
+            if (!nodeModulesExists) {
+                continue;
+            }
+            if (!(await fs.directoryExists(`${directory}/node_modules/${name}`))) {
+                continue;
+            }
+            const directories = fs.readDirSync(`${directory}/node_modules/${name}`);
+            for (let directory of directories) {
+                if (await fs.fileExists(`${directory}/package.json`)) {
+                    const subname = `${name}/${basename(directory)}`;
+                    nodeModules.push(subname);
+                }
+            }
+        }
         nodeModules = nodeModules.concat(
             Object.keys({ ...dependencies, ...devDependencies }).filter(
                 (name) => !name.startsWith('@types/'),
@@ -48,10 +60,20 @@ export async function exportsNodeModules({
         const moduleName = importDeclaration.getModuleSpecifierValue();
         let symbol = importDeclaration.getImportClause()!.getSymbol()!;
         symbol = typeChecker.getAliasedSymbol(symbol)!;
+        // Try to get default name
+        const defaultName = getName(symbol);
+        if (!(defaultName.startsWith('/') || defaultName.includes(':'))) {
+            result.push(new Entry({ name: getName(symbol), module: moduleName, isDefault: true }));
+        }
+        // Get other exports
         for (let exportSymbol of typeChecker.getExportsOfModule(symbol)) {
             const name = exportSymbol.getName();
             result.push(new Entry({ name, module: moduleName }));
         }
     }
     return result;
+}
+
+function getName(symbol: Symbol) {
+    return symbol.getName().replace(/["']/g, '');
 }
