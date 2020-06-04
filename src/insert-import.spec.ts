@@ -1,5 +1,6 @@
 import assert from 'assert';
 import { insertImport } from './insert-import';
+import { stripIndents, stripIndent } from 'common-tags';
 
 describe('insert import', () => {
     it('new import statement', () => {
@@ -67,5 +68,44 @@ describe('insert import', () => {
             },
         });
         assert.equal(result, `import { copy,\nrename, sync } from 'fs';\n`);
+    });
+
+    it('shebang should be kept', () => {
+        const result = insertImport({
+            sourceFileContent: stripIndents`
+            #!/usr/bin/env node
+            import { a } from 'b';
+            `,
+            declaration: {
+                isDefault: true,
+                name: 'x',
+                specifier: 'y',
+            },
+        });
+        assert.equal(result, `#!/usr/bin/env node\nimport { a } from 'b';\nimport x from 'y';\n`);
+    });
+
+    it('content after imports should be kept', () => {
+        const result = insertImport({
+            sourceFileContent: stripIndents`
+            import { a } from 'b';
+
+            const c = 1;
+            `,
+            declaration: {
+                isDefault: true,
+                name: 'x',
+                specifier: 'y',
+            },
+        });
+        assert.equal(
+            result,
+            stripIndents`
+            import { a } from 'b';
+            import x from 'y';
+
+            const c = 1;
+        `,
+        );
     });
 });

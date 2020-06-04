@@ -1,4 +1,4 @@
-import { Project, QuoteKind, ManipulationSettings } from 'ts-morph';
+import { Project, QuoteKind, ManipulationSettings, ScriptKind } from 'ts-morph';
 import { Entry } from './entry';
 
 type Declaration = {
@@ -23,8 +23,12 @@ export function insertImport({
             ...manipulationSettings,
         },
     });
-    const sourceFile = project.createSourceFile('0.ts', sourceFileContent, { overwrite: true });
+    const sourceFile = project.createSourceFile('0.ts', sourceFileContent, {
+        overwrite: true,
+    });
+    let importDeclarationIndex = 0;
     const importDeclaration = sourceFile.getImportDeclaration((importDeclaration) => {
+        importDeclarationIndex++;
         const literalValue = importDeclaration.getModuleSpecifier().getLiteralValue();
         return literalValue === declaration.specifier;
     });
@@ -38,12 +42,12 @@ export function insertImport({
                 : importDeclaration.addNamedImport(declaration.name);
         }
     } else {
-        sourceFile.addImportDeclaration({
+        sourceFile.insertImportDeclaration(importDeclarationIndex, {
             defaultImport: declaration.isDefault ? declaration.name : undefined,
             namedImports: declaration.isDefault ? [] : [declaration.name],
             moduleSpecifier: declaration.specifier,
         });
     }
 
-    return sourceFile.getText();
+    return sourceFile.getFullText();
 }
