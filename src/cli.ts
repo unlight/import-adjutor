@@ -8,12 +8,16 @@ const commands = [insertImport, exportsFromDirectory, exportsNodeModules];
 
 (async () => {
     const { command, args } = JSON.parse(await getStdin());
+    if (!command) {
+        throw new Error('Empty command');
+    }
     const func = commands.find((cmd) => cmd.name === command);
     if (!func) {
-        throw new Error('Unknown command');
+        throw new Error(`Unknown command ${String(command)}`);
     }
     const output = await func(args);
     process.stdout.write(JSON.stringify(output));
 })().catch((err) => {
     process.stderr.write(String(err));
+    process.exit(1);
 });

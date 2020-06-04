@@ -23,9 +23,8 @@ bundle() {
     cp -v README.md LICENSE package.json dist
     cd dist
     npx microbundle --entry cli.ts --target node --no-compress --format cjs --output .
-    rm -rvf tsconfig.json
+    rm -rvf tsconfig.json node_modules
     /usr/bin/find . -name '*.spec.ts' | xargs rm -rvf
-    # /usr/bin/find . -name '.rts2*' | xargs rm -rf
     package=$(cat package.json)
     package_name=$(echo $package | jq -r ".name")
     echo "$package" | jq ".main = \"${package_name}.js\"" \
