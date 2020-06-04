@@ -3,8 +3,9 @@
   "version": "0.0.0-dev",
   "description": "Parse ecmascript modules and collect names of export vars, functions, etc.",
   "main": "index.js",
+  "module": "index.js",
   "typings": "index.ts",
-  "bin": "cli.js",
+  "bin": "import-adjutor.js",
   "scripts": {
     "test": "npm run eslint && npm run tscheck && npm run test:cov",
     "test:r": "npm run mocha -- --no-timeouts src/*.spec.ts",
@@ -20,7 +21,7 @@
     "eslint:fix": "npm run eslint -- --fix",
     "lint:fix": "npm run tslint:fix || true && npm run eslint:fix",
     "tslint:fix": "tslint -p tsconfig.json --fix",
-    "build": "sh Taskfile build"
+    "build": "sh Taskfile bundle"
   },
   "repository": {
     "type": "git",

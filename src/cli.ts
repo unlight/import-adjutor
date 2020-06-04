@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 import getStdin from 'get-stdin';
 import { insertImport } from './insert-import';
+import { exportsFromDirectory } from './exports-from-directory';
+import { exportsNodeModules } from './exports-node-modules';
 
-const commands = [insertImport];
+const commands = [insertImport, exportsFromDirectory, exportsNodeModules];
 
 (async () => {
     const { command, args } = JSON.parse(await getStdin());
