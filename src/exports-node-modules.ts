@@ -31,10 +31,12 @@ export async function exportsNodeModules({
             if (name.startsWith('@types/')) {
                 continue;
             }
-            if (!nodeModulesExists) {
-                continue;
-            }
-            if (!(await fs.directoryExists(`${directory}/node_modules/${name}`))) {
+            if (
+                !(
+                    nodeModulesExists &&
+                    (await fs.directoryExists(`${directory}/node_modules/${name}`))
+                )
+            ) {
                 continue;
             }
             const directories = fs.readDirSync(`${directory}/node_modules/${name}`);
