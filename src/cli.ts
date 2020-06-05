@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 import getStdin from 'get-stdin';
 import { insertImport } from './insert-import';
 import { exportsFromDirectory } from './exports-from-directory';

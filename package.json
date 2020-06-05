@@ -5,7 +5,7 @@
   "main": "index.js",
   "module": "index.js",
   "typings": "index.ts",
-  "bin": "cli.js",
+  "bin": "bin.js",
   "scripts": {
     "test": "npm run eslint && npm run tscheck && npm run test:cov",
     "test:r": "npm run mocha -- --no-timeouts src/*.spec.ts",
