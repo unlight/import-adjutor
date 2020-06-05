@@ -57,7 +57,7 @@ async function walkDirectoryFiles({
     fileExcludePatterns?: string[];
 }) {
     for (const file of directoryFiles) {
-        if (extensions.find((ext) => file.endsWith(ext))) {
+        if (extensions.find((extension) => file.endsWith(extension))) {
             if (
                 fileExcludePatterns &&
                 micromatch.isMatch(file, fileExcludePatterns, { matchBase: true })

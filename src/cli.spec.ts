@@ -15,7 +15,7 @@ describe('cli', () => {
             assert.fail('empty command should fail');
         } catch (e) {
             const error: SpawnSyncReturns<string> = e;
-            assert.equal(error.stderr, 'Error: Empty command');
+            assert(error.stderr.includes('Error: Empty command'));
             assert.notEqual(error.status, 0);
         }
     });
