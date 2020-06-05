@@ -92,7 +92,7 @@ describe('exportsFromDirectory', () => {
             assert(result);
             assert.equal(result.name, 'subdirectoryFile');
             assert.equal(result.isDefault, false);
-            assert.equal(result.module, undefined);
+            assert(result.module === undefined);
         });
 
         it('ignore file patterns', async () => {

@@ -13,8 +13,8 @@ describe('cli', () => {
                 stdio: ['pipe', 'ignore', 'pipe'],
             });
             assert.fail('empty command should fail');
-        } catch (e) {
-            const error: SpawnSyncReturns<string> = e;
+        } catch (_) {
+            const error: SpawnSyncReturns<string> = _;
             assert(error.stderr.includes('Error: Empty command'));
             assert.notEqual(error.status, 0);
         }

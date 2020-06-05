@@ -21,7 +21,7 @@ export async function exportsNodeModules({
     const typeChecker = program.getTypeChecker();
     const result: Entry[] = [];
     const fs = project.getFileSystem();
-    let nodeModules: string[] = project.getAmbientModules().map(getName);
+    let nodeModules: string[] = project.getAmbientModules().map(getName); // eslint-disable-line unicorn/no-fn-reference-in-iterator
     if (await fs.fileExists(`${directory}/package.json`)) {
         const { dependencies, devDependencies } = JSON.parse(
             await fs.readFile(`${directory}/package.json`),
