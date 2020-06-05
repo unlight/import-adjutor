@@ -1,3 +1,11 @@
+## [1.0.1](https://github.com/unlight/import-adjutor/compare/v1.0.0...v1.0.1) (2020-06-05)
+
+
+### Bug Fixes
+
+* Shebang bundle CLI issue ([09662d1](https://github.com/unlight/import-adjutor/commit/09662d16492373ffaf5bf319f9bb649224dcdedb))
+* Show error with stack ([b50c64c](https://github.com/unlight/import-adjutor/commit/b50c64cb3665e41f607903ddf405400e5ce9bf6e))
+
 # 1.0.0 (2020-06-04)
 
 
