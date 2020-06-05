@@ -15,22 +15,4 @@ build() {
     set +x
 }
 
-bundle() {
-    set -x
-    rm -rfv dist
-    cp -rfv src dist
-    cat tsconfig.json | jq '.compilerOptions.module = "esnext" | del(.include, .compilerOptions.outDir)' > dist/tsconfig.json
-    cp -v README.md LICENSE package.json dist
-    cd dist
-    npx microbundle --entry cli.ts --target node --no-compress --format cjs --output .
-    rm -rvf tsconfig.json node_modules
-    /usr/bin/find . -name '*.spec.ts' | xargs rm -rvf
-    package=$(cat package.json)
-    package_name=$(echo $package | jq -r ".name")
-    echo "$package" | jq ".main = \"${package_name}.js\"" \
-        > package.json
-    cd ..
-    set +x
-}
-
 "$@"
