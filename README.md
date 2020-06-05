@@ -9,7 +9,7 @@ Ex- [esm-exports](https://github.com/unlight/esm-exports)
 echo json | import-adjutor
 ```
 
-Where `json` is:
+Where `json` is (JSON.stringified):
 
 ```js
 {
@@ -17,6 +17,8 @@ Where `json` is:
     args: object;
 }
 ```
+
+Output structure (JSON.stringified):
 
 ## API
 
@@ -52,6 +54,12 @@ interface ManipulationSettings extends SupportedFormatCodeSettingsOnly {
 }
 ```
 
+Output:
+
+```
+string
+```
+
 #### exportsNodeModules
 
 ```
@@ -63,6 +71,17 @@ args:
     fileExcludePatterns?: string[];
 ```
 
+Output:
+
+```
+Array <{
+    name: string;
+    module?: string;
+    filepath?: string;
+    isDefault?: boolean;
+}>,
+```
+
 #### exportsFromDirectory
 
 ```
@@ -72,6 +91,40 @@ args:
     project?: Project;
     folderExcludePatterns?: string[];
     fileExcludePatterns?: string[];
+```
+
+Output:
+
+```
+Array <{
+    name: string;
+    module?: string;
+    filepath?: string;
+    isDefault?: boolean;
+}>,
+```
+
+#### exportsFromFolders
+
+```
+command: 'exportsFromFolders';
+args:
+    folders: string[];
+    excludePatterns?: Record<
+        string,
+        { folderExcludePatterns: string[]; fileExcludePatterns: string[] }
+    >;
+```
+
+Output:
+
+```
+Array <{
+    name: string;
+    module?: string;
+    filepath?: string;
+    isDefault?: boolean;
+}>,
 ```
 
 ## Resources

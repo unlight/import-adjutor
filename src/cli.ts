@@ -2,8 +2,9 @@ import getStdin from 'get-stdin';
 import { insertImport } from './insert-import';
 import { exportsFromDirectory } from './exports-from-directory';
 import { exportsNodeModules } from './exports-node-modules';
+import { exportsFromFolders } from './exports-from-folders';
 
-const commands = [insertImport, exportsFromDirectory, exportsNodeModules];
+const commands = [insertImport, exportsFromDirectory, exportsNodeModules, exportsFromFolders];
 
 (async () => {
     const { command, args } = JSON.parse(await getStdin());
