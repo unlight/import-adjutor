@@ -69,7 +69,7 @@ async function walkDirectoryFiles({
         } else if (await fs.directoryExists(file)) {
             if (
                 folderExcludePatterns &&
-                micromatch.isMatch(file, folderExcludePatterns, { matchBase: true })
+                micromatch.isMatch(file, folderExcludePatterns, { contains: true })
             ) {
                 continue;
             }

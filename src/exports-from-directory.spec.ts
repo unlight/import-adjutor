@@ -2,78 +2,12 @@ import { Project } from 'ts-morph';
 import { exportsFromDirectory } from './exports-from-directory';
 import assert from 'assert';
 import { Entry } from './entry';
+import { createProject } from './create-project';
 
 describe('exportsFromDirectory', () => {
-    let project: Project;
+    describe('memory file system', () => {
+        let project: Project;
 
-    beforeEach(() => {
-        project = new Project({
-            compilerOptions: {
-                esModuleInterop: true,
-            },
-            skipFileDependencyResolution: true,
-            addFilesFromTsConfig: false,
-            useInMemoryFileSystem: true,
-        });
-    });
-
-    it('files in directory', async () => {
-        project.createSourceFile('/src/source1.ts', `export const foo1 = 1`).saveSync();
-        project.createSourceFile('/src/source2.tsx', `export const foo2 = 2`).saveSync();
-        const result = await exportsFromDirectory({ project, directory: '/src' });
-        assert.deepStrictEqual(result, [
-            new Entry({
-                filepath: '/src/source1.ts',
-                name: 'foo1',
-            }),
-            new Entry({
-                filepath: '/src/source2.tsx',
-                name: 'foo2',
-            }),
-        ]);
-    });
-
-    it('in sub directory', async () => {
-        project.createSourceFile('/src/source1.ts', `export const foo1 = 1`).saveSync();
-        project.createSourceFile('/src/subdir1/source3.tsx', `export const foo3 = 3`).saveSync();
-        const result = await exportsFromDirectory({ project, directory: '/src' });
-        assert.deepStrictEqual(result, [
-            new Entry({
-                filepath: '/src/source1.ts',
-                name: 'foo1',
-            }),
-            new Entry({
-                filepath: '/src/subdir1/source3.tsx',
-                name: 'foo3',
-            }),
-        ]);
-    });
-
-    it('entry default', async () => {
-        project.createSourceFile('/src/source.ts', `export default def`).saveSync();
-        const result = await exportsFromDirectory({ project, directory: '/src' });
-        assert.strict.deepEqual(result, [
-            new Entry({
-                filepath: '/src/source.ts',
-                isDefault: true,
-                name: 'def',
-            }),
-        ]);
-    });
-
-    it('typescript commonjs default export', async () => {
-        project.createSourceFile('/src/source.ts', `export = def`).saveSync();
-        const result = await exportsFromDirectory({ project, directory: '/src' });
-        assert.strict.deepEqual(result, [
-            new Entry({
-                name: 'def',
-                filepath: '/src/source.ts',
-                isDefault: true,
-            }),
-        ]);
-    });
-
-    describe('real file system', () => {
         beforeEach(() => {
             project = new Project({
                 compilerOptions: {
@@ -81,10 +15,70 @@ describe('exportsFromDirectory', () => {
                 },
                 skipFileDependencyResolution: true,
                 addFilesFromTsConfig: false,
-                useInMemoryFileSystem: false,
+                useInMemoryFileSystem: true,
             });
         });
 
+        it('files in directory', async () => {
+            project.createSourceFile('/src/source1.ts', `export const foo1 = 1`).saveSync();
+            project.createSourceFile('/src/source2.tsx', `export const foo2 = 2`).saveSync();
+            const result = await exportsFromDirectory({ project, directory: '/src' });
+            assert.deepStrictEqual(result, [
+                new Entry({
+                    filepath: '/src/source1.ts',
+                    name: 'foo1',
+                }),
+                new Entry({
+                    filepath: '/src/source2.tsx',
+                    name: 'foo2',
+                }),
+            ]);
+        });
+
+        it('in sub directory', async () => {
+            project.createSourceFile('/src/source1.ts', `export const foo1 = 1`).saveSync();
+            project
+                .createSourceFile('/src/subdir1/source3.tsx', `export const foo3 = 3`)
+                .saveSync();
+            const result = await exportsFromDirectory({ project, directory: '/src' });
+            assert.deepStrictEqual(result, [
+                new Entry({
+                    filepath: '/src/source1.ts',
+                    name: 'foo1',
+                }),
+                new Entry({
+                    filepath: '/src/subdir1/source3.tsx',
+                    name: 'foo3',
+                }),
+            ]);
+        });
+
+        it('entry default', async () => {
+            project.createSourceFile('/src/source.ts', `export default def`).saveSync();
+            const result = await exportsFromDirectory({ project, directory: '/src' });
+            assert.strict.deepEqual(result, [
+                new Entry({
+                    filepath: '/src/source.ts',
+                    isDefault: true,
+                    name: 'def',
+                }),
+            ]);
+        });
+
+        it('typescript commonjs default export', async () => {
+            project.createSourceFile('/src/source.ts', `export = def`).saveSync();
+            const result = await exportsFromDirectory({ project, directory: '/src' });
+            assert.strict.deepEqual(result, [
+                new Entry({
+                    name: 'def',
+                    filepath: '/src/source.ts',
+                    isDefault: true,
+                }),
+            ]);
+        });
+    });
+
+    describe('real file system', () => {
         it('real subdirectories', async () => {
             const result = (await exportsFromDirectory({ directory: 'fixtures' })).find((entry) =>
                 entry.filepath!.endsWith('fixtures/subdirectory/subdirectory-file.ts'),
@@ -106,7 +100,6 @@ describe('exportsFromDirectory', () => {
                 ],
             };
             const result = await exportsFromDirectory({
-                project,
                 directory: 'fixtures',
                 ...options,
             });
@@ -143,6 +136,13 @@ describe('exportsFromDirectory', () => {
                 ),
                 'folder equal name should be ignored',
             );
+        });
+
+        it('javascript files should have exports', async () => {
+            const result = await exportsFromDirectory({
+                directory: 'fixtures/second-folder',
+            });
+            assert(result.find((entry) => entry.name === 'secondFolderFile'));
         });
     });
 });
