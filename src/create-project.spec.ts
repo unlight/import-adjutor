@@ -25,12 +25,15 @@ describe('create-project', () => {
             afterEach(() => {
                 result = normalizeFileList(project);
                 assert(
-                    !result.includes('/fixtures/~playground/test-ignore/a.ts'),
+                    !result.includes('/fixtures/playground/test-ignore/ignore-me.ts'),
                     'file should be ignored',
                 );
-                assert(result.includes('/fixtures/~playground/cli.ts'), 'cli.ts should be kept');
                 assert(
-                    result.includes('/fixtures/~playground/playground.ts'),
+                    result.includes('/fixtures/playground/resolve.ts'),
+                    'resolve.ts should be kept',
+                );
+                assert(
+                    result.includes('/fixtures/playground/playground.ts'),
                     'playground.ts should be kept',
                 );
             });
@@ -38,14 +41,14 @@ describe('create-project', () => {
             it('ends with slash', async () => {
                 project = await createProject({
                     directory: 'fixtures',
-                    folderExcludePatterns: ['fixtures/~playground/'],
+                    folderExcludePatterns: ['fixtures/playground/'],
                 });
             });
 
             it('ends with single star', async () => {
                 project = await createProject({
                     directory: 'fixtures',
-                    folderExcludePatterns: ['~playground/*'],
+                    folderExcludePatterns: ['playground/*'],
                 });
             });
         });
@@ -54,7 +57,7 @@ describe('create-project', () => {
             afterEach(() => {
                 result = normalizeFileList(project);
                 assert.strict.deepEqual(
-                    result.filter((s) => s.startsWith('/fixtures/~playground')),
+                    result.filter((s) => s.startsWith('/fixtures/playground')),
                     [],
                 );
             });
@@ -62,14 +65,14 @@ describe('create-project', () => {
             it('not ending slash', async () => {
                 project = await createProject({
                     directory: 'fixtures',
-                    folderExcludePatterns: ['fixtures/~playground'],
+                    folderExcludePatterns: ['fixtures/playground'],
                 });
             });
 
             it('folder name', async () => {
                 project = await createProject({
                     directory: 'fixtures',
-                    folderExcludePatterns: ['~playground'],
+                    folderExcludePatterns: ['playground'],
                 });
             });
         });
