@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/unlight/import-adjutor/compare/v1.0.1...v1.1.0) (2020-06-06)
+
+
+### Features
+
+* New API exportsFromFolders ([b0bd705](https://github.com/unlight/import-adjutor/commit/b0bd705dff70b9b19b258a36e6dc6c977bfa05ac))
+
 ## [1.0.1](https://github.com/unlight/import-adjutor/compare/v1.0.0...v1.0.1) (2020-06-05)
 
 
