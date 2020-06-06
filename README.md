@@ -93,6 +93,10 @@ args:
     fileExcludePatterns?: string[];
 ```
 
+If `directory` will contains `tsconfig.json` or `jsonconfig.json` then source files
+will be added according to `include`, `exclude` patterns.
+`folderExcludePatterns`, `fileExcludePatterns` will be ignored.
+
 Output:
 
 ```

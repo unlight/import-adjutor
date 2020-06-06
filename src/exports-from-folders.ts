@@ -1,5 +1,4 @@
-import micromatch from 'micromatch';
-import { FileSystemHost, Node,Project } from 'ts-morph';
+import { FileSystemHost, Node, Project } from 'ts-morph';
 
 import { extensions } from './constants';
 import { createProject } from './create-project';

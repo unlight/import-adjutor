@@ -1,5 +1,7 @@
-import micromatch from 'micromatch';
-import { CompilerOptions, FileSystemHost,Project, ProjectOptions } from 'ts-morph';
+import globrex from 'globrex';
+import { basename, relative } from 'path';
+import picomatch from 'picomatch';
+import { CompilerOptions, FileSystemHost, Project, ProjectOptions } from 'ts-morph';
 
 import { extensions } from './constants';
 
@@ -35,6 +37,7 @@ export async function createProject({
         project.addSourceFilesFromTsConfig(config);
     } else {
         await walkDirectoryFiles({
+            root: directory,
             directoryFiles,
             project,
             fs,
@@ -46,41 +49,68 @@ export async function createProject({
 }
 
 async function walkDirectoryFiles({
+    root,
     directoryFiles,
     project,
     fs = project.getFileSystem(),
     folderExcludePatterns,
     fileExcludePatterns,
+    _folderExcludeMatcher = folderExcludePatterns && folderExcludePatterns.map(createFolderMatcher),
+    _fileExcludeMatcher = fileExcludePatterns && fileExcludePatterns.map(createFileMatcher),
 }: {
+    root: string;
     directoryFiles: string[];
     project: Project;
     fs: FileSystemHost;
     folderExcludePatterns?: string[];
     fileExcludePatterns?: string[];
+    _folderExcludeMatcher?: ReturnType<typeof createFolderMatcher>[];
+    _fileExcludeMatcher?: ReturnType<typeof createFileMatcher>[];
 }) {
     for (const file of directoryFiles) {
         if (extensions.find((extension) => file.endsWith(extension))) {
-            if (
-                fileExcludePatterns &&
-                micromatch.isMatch(file, fileExcludePatterns, { matchBase: true })
-            ) {
+            if (_fileExcludeMatcher && _fileExcludeMatcher.some((matcher) => matcher(file))) {
                 continue;
             }
             project.addSourceFileAtPath(file);
         } else if (await fs.directoryExists(file)) {
             if (
-                folderExcludePatterns &&
-                micromatch.isMatch(file, folderExcludePatterns, { contains: true })
+                _folderExcludeMatcher &&
+                _folderExcludeMatcher.some(
+                    (matcher) =>
+                        matcher.regex.test(file) ||
+                        matcher.contains.test(file) ||
+                        matcher.base(file),
+                )
             ) {
                 continue;
             }
             await walkDirectoryFiles({
+                root,
                 directoryFiles: fs.readDirSync(file),
                 project,
                 fs,
                 folderExcludePatterns,
                 fileExcludePatterns,
+                _folderExcludeMatcher,
+                _fileExcludeMatcher,
             });
         }
     }
+}
+
+function createFolderMatcher(pattern: string) {
+    const contains = `*/${pattern}/*`
+        .replace('//', '/')
+        .replace('/*/*', '/*')
+        .replace('*/*/', '*/');
+    return {
+        regex: globrex(pattern).regex,
+        contains: globrex(contains).regex,
+        base: picomatch(pattern, { matchBase: true } as any),
+    };
+}
+
+function createFileMatcher(pattern: string) {
+    return picomatch(pattern, { matchBase: true } as any);
 }

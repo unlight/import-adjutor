@@ -19,5 +19,5 @@
     "skipLibCheck": true,
     "lib": ["esnext"]
   },
-  "include": ["src/**/*.ts"]
+  "include": ["src", "fixtures"]
 }

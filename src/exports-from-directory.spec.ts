@@ -6,6 +6,13 @@ import { Entry } from './entry';
 import { exportsFromDirectory } from './exports-from-directory';
 
 describe('exportsFromDirectory', () => {
+    function normalizeFileList(project: Project) {
+        return project
+            .getSourceFiles()
+            .map((s) => s.getFilePath())
+            .map((path) => path.slice(process.cwd().length));
+    }
+
     describe('memory file system', () => {
         let project: Project;
 
@@ -92,16 +99,10 @@ describe('exportsFromDirectory', () => {
 
         it('ignore file patterns', async () => {
             const options = {
-                fileExcludePatterns: [
-                    '*.obj',
-                    '.DS_Store',
-                    '*.db',
-                    '*.sublime-workspace',
-                    'ignored-*',
-                ],
+                fileExcludePatterns: ['*.sublime-workspace', 'ignored-*'],
             };
             const result = await exportsFromDirectory({
-                directory: 'fixtures',
+                directory: `${process.cwd()}/fixtures`,
                 ...options,
             });
             assert.ok(

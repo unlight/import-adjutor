@@ -51,9 +51,9 @@ describe('nodeModules', () => {
     });
 
     describe('unknown default should not be in result', () => {
-        it('micromatch', () => {
+        it('match', () => {
             assert.deepEqual(
-                result.filter((entry) => entry.module === 'micromatch' && entry.name === 'unknown'),
+                result.filter((entry) => entry.module === 'picomatch' && entry.name === 'unknown'),
                 [],
             );
         });
