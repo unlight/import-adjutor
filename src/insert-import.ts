@@ -1,4 +1,5 @@
-import { Project, QuoteKind, ManipulationSettings, ScriptKind } from 'ts-morph';
+import { ManipulationSettings, Project, QuoteKind, ScriptKind } from 'ts-morph';
+
 import { Entry } from './entry';
 
 type Declaration = {

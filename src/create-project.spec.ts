@@ -1,7 +1,8 @@
-import micromatch from 'micromatch';
 import assert from 'assert';
-import { createProject } from './create-project';
+import micromatch from 'micromatch';
 import { Project } from 'ts-morph';
+
+import { createProject } from './create-project';
 
 function normalizeFileList(project: Project) {
     return project

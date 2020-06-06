@@ -1,6 +1,7 @@
-import { Project, ProjectOptions, CompilerOptions, FileSystemHost } from 'ts-morph';
-import { extensions } from './constants';
 import micromatch from 'micromatch';
+import { CompilerOptions, FileSystemHost,Project, ProjectOptions } from 'ts-morph';
+
+import { extensions } from './constants';
 
 export async function createProject({
     directory,

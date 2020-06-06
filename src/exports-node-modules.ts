@@ -1,7 +1,9 @@
+import { basename } from 'path';
 import { Project, Symbol } from 'ts-morph';
+
 import { createProject } from './create-project';
 import { Entry } from './entry';
-import { basename } from 'path';
+import { sourcefileDefaultExports } from './sourcefile-default-exports';
 
 type Arguments = {
     directory: string;
@@ -60,14 +62,17 @@ export async function exportsNodeModules({
     const importDeclarations = sourceFile.getImportDeclarations();
     for (let importDeclaration of importDeclarations) {
         const moduleName = importDeclaration.getModuleSpecifierValue();
-        let symbol = importDeclaration.getImportClause()!.getSymbol()!;
-        symbol = typeChecker.getAliasedSymbol(symbol)!;
         // Try to get default name
-        const defaultName = getName(symbol);
-        if (!(defaultName.startsWith('/') || defaultName.includes(':'))) {
-            result.push(new Entry({ name: getName(symbol), module: moduleName, isDefault: true }));
+        const sourceFile = importDeclaration.getModuleSpecifierSourceFile();
+        if (sourceFile) {
+            const name = sourcefileDefaultExports(sourceFile);
+            if (name) {
+                result.push(new Entry({ name, module: moduleName, isDefault: true }));
+            }
         }
         // Get other exports
+        let symbol = importDeclaration.getImportClause()!.getSymbol()!;
+        symbol = typeChecker.getAliasedSymbol(symbol)!;
         for (let exportSymbol of typeChecker.getExportsOfModule(symbol)) {
             const name = exportSymbol.getName();
             result.push(new Entry({ name, module: moduleName }));

@@ -1,8 +1,9 @@
-import { Project, FileSystemHost, Node } from 'ts-morph';
-import { extensions } from './constants';
-import { Entry } from './entry';
 import micromatch from 'micromatch';
+import { FileSystemHost, Node,Project } from 'ts-morph';
+
+import { extensions } from './constants';
 import { createProject } from './create-project';
+import { Entry } from './entry';
 import { exportsFromDirectory } from './exports-from-directory';
 
 type Arguments = {

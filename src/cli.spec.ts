@@ -1,5 +1,6 @@
-import { execSync, SpawnSyncReturns } from 'child_process';
 import assert from 'assert';
+import { execSync, SpawnSyncReturns } from 'child_process';
+
 import { insertImport } from './insert-import';
 
 const node = 'node -r ts-node/register/transpile-only';

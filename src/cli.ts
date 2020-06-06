@@ -1,8 +1,9 @@
 import getStdin from 'get-stdin';
-import { insertImport } from './insert-import';
+
 import { exportsFromDirectory } from './exports-from-directory';
-import { exportsNodeModules } from './exports-node-modules';
 import { exportsFromFolders } from './exports-from-folders';
+import { exportsNodeModules } from './exports-node-modules';
+import { insertImport } from './insert-import';
 
 const commands = [insertImport, exportsFromDirectory, exportsNodeModules, exportsFromFolders];
 

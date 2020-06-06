@@ -1,8 +1,10 @@
-import { Project, FileSystemHost, Node } from 'ts-morph';
-import { extensions } from './constants';
-import { Entry } from './entry';
 import micromatch from 'micromatch';
+import { FileSystemHost, Node,Project } from 'ts-morph';
+
+import { extensions } from './constants';
 import { createProject } from './create-project';
+import { Entry } from './entry';
+import { sourcefileDefaultExports } from './sourcefile-default-exports';
 
 type Arguments = {
     directory: string;
@@ -28,14 +30,10 @@ export async function exportsFromDirectory({
                 result.push(new Entry({ name, filepath }));
             }
         }
-        sourceFile.getExportAssignment((exportAssignment) => {
-            const expression = exportAssignment.getExpression();
-            if (Node.isIdentifier(expression)) {
-                const name = String(expression.compilerNode.escapedText);
-                result.push(new Entry({ name, filepath, isDefault: true }));
-            }
-            return false;
-        });
+        const name = sourcefileDefaultExports(sourceFile);
+        if (name) {
+            result.push(new Entry({ name, filepath, isDefault: true }));
+        }
     }
     return result;
 }

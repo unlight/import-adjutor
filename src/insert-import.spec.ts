@@ -1,6 +1,7 @@
 import assert from 'assert';
+import { stripIndent,stripIndents } from 'common-tags';
+
 import { insertImport } from './insert-import';
-import { stripIndents, stripIndent } from 'common-tags';
 
 describe('insert import', () => {
     it('new import statement', () => {

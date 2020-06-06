@@ -1,6 +1,7 @@
-import { exportsNodeModules } from './exports-node-modules';
 import assert from 'assert';
+
 import { Entry } from './entry';
+import { exportsNodeModules } from './exports-node-modules';
 
 describe('nodeModules', () => {
     let result: Entry[] = [];
@@ -15,10 +16,6 @@ describe('nodeModules', () => {
 
     it('fs module', () => {
         assert(result.find((entry) => entry.module == 'fs'));
-    });
-
-    it('buffer default name', () => {
-        assert(result.find((entry) => entry.name == 'buffer' && entry.isDefault));
     });
 
     it('React default', () => {
@@ -51,5 +48,21 @@ describe('nodeModules', () => {
 
     it('angualr core testing submodule', () => {
         assert(result.find((entry) => entry.module === '@angular/core/testing'));
+    });
+
+    describe('unknown default should not be in result', () => {
+        it('micromatch', () => {
+            assert.deepEqual(
+                result.filter((entry) => entry.module === 'micromatch' && entry.name === 'unknown'),
+                [],
+            );
+        });
+
+        it('every default', () => {
+            assert.deepEqual(
+                result.filter((entry) => entry.name === 'unknown' && entry.isDefault),
+                [],
+            );
+        });
     });
 });

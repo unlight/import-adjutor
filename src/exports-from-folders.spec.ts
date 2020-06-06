@@ -1,6 +1,7 @@
-import { exportsFromFolders } from './exports-from-folders';
 import assert from 'assert';
+
 import { Entry } from './entry';
+import { exportsFromFolders } from './exports-from-folders';
 
 describe('exportsFromFolders', () => {
     it('exports from several folders', async () => {

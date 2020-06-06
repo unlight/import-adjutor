@@ -1,8 +1,9 @@
-import { Project } from 'ts-morph';
-import { exportsFromDirectory } from './exports-from-directory';
 import assert from 'assert';
-import { Entry } from './entry';
+import { Project } from 'ts-morph';
+
 import { createProject } from './create-project';
+import { Entry } from './entry';
+import { exportsFromDirectory } from './exports-from-directory';
 
 describe('exportsFromDirectory', () => {
     describe('memory file system', () => {
