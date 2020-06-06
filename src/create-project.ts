@@ -18,6 +18,7 @@ export async function createProject({
     const project = new Project({
         compilerOptions: {
             esModuleInterop: true,
+            allowJs: true,
             ...compilerOptions,
         },
         skipFileDependencyResolution: true,
