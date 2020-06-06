@@ -1,3 +1,12 @@
+## [1.1.1](https://github.com/unlight/import-adjutor/compare/v1.1.0...v1.1.1) (2020-06-06)
+
+
+### Bug Fixes
+
+* Allow JS when creating project ([b4c8f03](https://github.com/unlight/import-adjutor/commit/b4c8f0330c0d83ac4eb95d2e79be5aa935764fea))
+* Improved getting name of export default ([14e280b](https://github.com/unlight/import-adjutor/commit/14e280b928d1843aa3554fae65b7ef6e4fe75780))
+* Improved ignore patterns handling ([25c3227](https://github.com/unlight/import-adjutor/commit/25c3227f48274604b0d31fea9b85a84764e1f96c))
+
 # [1.1.0](https://github.com/unlight/import-adjutor/compare/v1.0.1...v1.1.0) (2020-06-06)
 
 
