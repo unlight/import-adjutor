@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/unlight/import-adjutor/compare/v1.1.1...v1.1.2) (2020-06-07)
+
+
+### Bug Fixes
+
+* Improved ignoring patterns ([d9c3c4f](https://github.com/unlight/import-adjutor/commit/d9c3c4f75dec985d66eca6e71af22b790cd27e73))
+
 ## [1.1.1](https://github.com/unlight/import-adjutor/compare/v1.1.0...v1.1.1) (2020-06-06)
 
 
