@@ -1,7 +1,8 @@
 import assert from 'assert';
-import { stripIndent,stripIndents } from 'common-tags';
+import { stripIndent, stripIndents } from 'common-tags';
 
 import { insertImport } from './insert-import';
+import { QuoteKind } from 'ts-morph';
 
 describe('insert import', () => {
     it('new import statement', () => {
@@ -108,5 +109,17 @@ describe('insert import', () => {
             const c = 1;
         `,
         );
+    });
+
+    it('manipulationSettings quoteKind', () => {
+        const result = insertImport({
+            sourceFileContent: ``,
+            declaration: {
+                name: 'rename',
+                specifier: 'fs',
+            },
+            manipulationSettings: { quoteKind: QuoteKind.Double } as any,
+        });
+        assert.equal(result, `import { rename } from "fs";\n`);
     });
 });

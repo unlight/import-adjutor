@@ -11,6 +11,20 @@ function normalizeFileList(project: Project) {
 }
 
 describe('create-project', () => {
+    let project: Project;
+    describe('checking files (cannot modify allowJS)', () => {
+        it.skip('must include javascript with tsconfig', async () => {
+            project = await createProject({
+                directory: `${process.cwd()}`,
+                compilerOptions: {
+                    allowJs: true,
+                },
+            });
+            const files = normalizeFileList(project);
+            assert(files.find((file) => file.endsWith('src/bin.js')));
+        });
+    });
+
     describe('folder exclude patterns', () => {
         let result: string[];
         let project: Project;
