@@ -106,4 +106,10 @@ describe('create-project', () => {
             );
         });
     });
+
+    it.skip('root directory stack overflow', async () => {
+        project = await createProject({
+            directory: `c:`,
+        });
+    });
 });

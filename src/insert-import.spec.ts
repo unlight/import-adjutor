@@ -1,8 +1,8 @@
 import assert from 'assert';
 import { stripIndent, stripIndents } from 'common-tags';
+import { QuoteKind } from 'ts-morph';
 
 import { insertImport } from './insert-import';
-import { QuoteKind } from 'ts-morph';
 
 describe('insert import', () => {
     it('new import statement', () => {

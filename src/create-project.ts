@@ -3,7 +3,7 @@ import { basename, relative } from 'path';
 import picomatch from 'picomatch';
 import { CompilerOptions, FileSystemHost, Project, ProjectOptions } from 'ts-morph';
 
-import { extensions } from './constants';
+import { defaultExcludeFolders, extensions } from './constants';
 
 export async function createProject({
     directory,
@@ -55,8 +55,8 @@ async function walkDirectoryFiles({
     fs = project.getFileSystem(),
     folderExcludePatterns,
     fileExcludePatterns,
-    _folderExcludeMatcher = folderExcludePatterns && folderExcludePatterns.map(createFolderMatcher),
-    _fileExcludeMatcher = fileExcludePatterns && fileExcludePatterns.map(createFileMatcher),
+    _folderExcludeMatcher = createFolderExcludeMatcher(folderExcludePatterns!),
+    _fileExcludeMatcher = createFileMatcher(fileExcludePatterns),
 }: {
     root: string;
     directoryFiles: string[];
@@ -64,15 +64,17 @@ async function walkDirectoryFiles({
     fs: FileSystemHost;
     folderExcludePatterns?: string[];
     fileExcludePatterns?: string[];
-    _folderExcludeMatcher?: ReturnType<typeof createFolderMatcher>[];
-    _fileExcludeMatcher?: ReturnType<typeof createFileMatcher>[];
+    _folderExcludeMatcher?: ReturnType<typeof createFolderExcludeMatcher>;
+    _fileExcludeMatcher?: ReturnType<typeof createFileMatcher>;
 }) {
     for (const file of directoryFiles) {
         if (extensions.find((extension) => file.endsWith(extension))) {
             if (_fileExcludeMatcher && _fileExcludeMatcher.some((matcher) => matcher(file))) {
                 continue;
             }
-            project.addSourceFileAtPath(file);
+            try {
+                project.addSourceFileAtPath(file);
+            } catch {} // eslint-disable-line no-empty
         } else if (await fs.directoryExists(file)) {
             if (
                 _folderExcludeMatcher &&
@@ -85,9 +87,15 @@ async function walkDirectoryFiles({
             ) {
                 continue;
             }
+
+            let directoryFiles: string[] = [];
+            try {
+                directoryFiles = fs.readDirSync(file);
+            } catch {} // eslint-disable-line no-empty
+
             await walkDirectoryFiles({
                 root,
-                directoryFiles: fs.readDirSync(file),
+                directoryFiles,
                 project,
                 fs,
                 folderExcludePatterns,
@@ -99,18 +107,24 @@ async function walkDirectoryFiles({
     }
 }
 
-function createFolderMatcher(pattern: string) {
-    const contains = `*/${pattern}/*`
-        .replace('//', '/')
-        .replace('/*/*', '/*')
-        .replace('*/*/', '*/');
-    return {
-        regex: globrex(pattern).regex,
-        contains: globrex(contains).regex,
-        base: picomatch(pattern, { matchBase: true } as any),
-    };
+function createFolderExcludeMatcher(patterns: string[]) {
+    patterns = (patterns || []).concat(defaultExcludeFolders);
+    patterns = [...new Set(patterns).values()];
+    return patterns.map((pattern) => {
+        const contains = `*/${pattern}/*`
+            .replace('//', '/')
+            .replace('/*/*', '/*')
+            .replace('*/*/', '*/');
+        return {
+            regex: globrex(pattern).regex,
+            contains: globrex(contains).regex,
+            base: picomatch(pattern, { matchBase: true } as any),
+        };
+    });
 }
 
-function createFileMatcher(pattern: string) {
-    return picomatch(pattern, { matchBase: true } as any);
+function createFileMatcher(patterns?: string[]) {
+    if (patterns) {
+        return patterns.map((pattern) => picomatch(pattern, { matchBase: true } as any));
+    }
 }
