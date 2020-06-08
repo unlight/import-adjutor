@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/unlight/import-adjutor/compare/v1.1.2...v1.2.0) (2020-06-08)
+
+
+### Features
+
+* Prevent fail if file/directory inaccessible ([eb08532](https://github.com/unlight/import-adjutor/commit/eb08532b501c78edc7d964c5976bcc66441ff193))
+
 ## [1.1.2](https://github.com/unlight/import-adjutor/compare/v1.1.1...v1.1.2) (2020-06-07)
 
 
