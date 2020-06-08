@@ -146,5 +146,12 @@ describe('exportsFromDirectory', () => {
             });
             assert(result.find((entry) => entry.name === 'secondFolderFile'));
         });
+
+        it('tsx file', async () => {
+            const result = await exportsFromDirectory({
+                directory: 'fixtures/playground',
+            });
+            assert(result.find((entry) => entry.name === 'TsxComp'));
+        });
     });
 });
