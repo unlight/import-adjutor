@@ -108,29 +108,6 @@ Array <{
 }>,
 ```
 
-#### exportsFromFolders
-
-```
-command: 'exportsFromFolders';
-args:
-    folders: string[];
-    excludePatterns?: Record<
-        string,
-        { folderExcludePatterns: string[]; fileExcludePatterns: string[] }
-    >;
-```
-
-Output:
-
-```
-Array <{
-    name: string;
-    module?: string;
-    filepath?: string;
-    isDefault?: boolean;
-}>,
-```
-
 ## Resources
 
 -   https://ts-ast-viewer.com/

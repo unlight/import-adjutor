@@ -22,6 +22,5 @@ for (let importDeclaration of importDeclarations) {
     symbol = typeChecker.getAliasedSymbol(symbol)!;
     for (let exportSymbol of typeChecker.getExportsOfModule(symbol)) {
         const name = exportSymbol.getName();
-        console.log('name', name);
     }
 }
