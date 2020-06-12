@@ -1,3 +1,20 @@
+# [2.0.0](https://github.com/unlight/import-adjutor/compare/v1.2.0...v2.0.0) (2020-06-12)
+
+
+### Bug Fixes
+
+* Unable to find ambient modules from non current directory ([af6c6fb](https://github.com/unlight/import-adjutor/commit/af6c6fbc3aae662012818b20578bb2739aaa7e56))
+
+
+### Features
+
+* Removed `exportsFromFolders` API ([68dd477](https://github.com/unlight/import-adjutor/commit/68dd477f64f8ee7860354340c5d4fabbba521306))
+
+
+### BREAKING CHANGES
+
+* Removed `exportsFromFolders` API since it required change current working directory
+
 # [1.2.0](https://github.com/unlight/import-adjutor/compare/v1.1.2...v1.2.0) (2020-06-08)
 
 
