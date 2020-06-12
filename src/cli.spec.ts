@@ -1,5 +1,6 @@
 import assert from 'assert';
 import { execSync, SpawnSyncReturns } from 'child_process';
+import { resolve } from 'path';
 
 import { insertImport } from './insert-import';
 
@@ -51,5 +52,19 @@ describe('cli', () => {
             },
         });
         assert.equal(result, `import { copy } from 'fs';\n`);
+    });
+
+    it('real app from not current directory', () => {
+        const directory = resolve(`${__dirname}/../fixtures/nestjs-app`);
+        const result = createExecSync({
+            input: {
+                command: 'exportsNodeModules',
+                args: {
+                    directory,
+                },
+            },
+        });
+        assert(result.filter((entry) => entry.module === '@nestjs/graphql').length > 0);
+        assert(result.find((entry) => entry.name === 'ID'));
     });
 });

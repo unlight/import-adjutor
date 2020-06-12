@@ -1,5 +1,7 @@
 import assert from 'assert';
+import { resolve } from 'path';
 
+import { createProject } from './create-project';
 import { Entry } from './entry';
 import { exportsNodeModules } from './exports-node-modules';
 
@@ -8,7 +10,7 @@ describe('nodeModules', () => {
 
     describe('real directory', () => {
         before(async () => {
-            result = await exportsNodeModules({ directory: process.cwd() });
+            result = await exportsNodeModules({ directory: `${__dirname}/..` });
         });
 
         it('node modules should exists', () => {

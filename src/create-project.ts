@@ -1,5 +1,5 @@
 import globrex from 'globrex';
-import { basename, relative } from 'path';
+import { basename, relative , resolve } from 'path';
 import picomatch from 'picomatch';
 import { CompilerOptions, FileSystemHost, Project, ProjectOptions } from 'ts-morph';
 
@@ -28,6 +28,7 @@ export async function createProject({
         addFilesFromTsConfig: false,
         ...projectOptions,
     });
+
     const fs = project.getFileSystem();
     const directoryFiles = fs.readDirSync(directory);
     const config = directoryFiles.find((file) => {
@@ -80,6 +81,7 @@ async function walkDirectoryFiles({
                 _folderExcludeMatcher &&
                 _folderExcludeMatcher.some(
                     (matcher) =>
+                        matcher.ends(file) ||
                         matcher.regex.test(file) ||
                         matcher.contains.test(file) ||
                         matcher.base(file),
@@ -119,6 +121,7 @@ function createFolderExcludeMatcher(patterns: string[]) {
             regex: globrex(pattern).regex,
             contains: globrex(contains).regex,
             base: picomatch(pattern, { matchBase: true } as any),
+            ends: (file: string) => file.endsWith(`/${pattern}`),
         };
     });
 }

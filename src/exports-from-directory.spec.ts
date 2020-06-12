@@ -102,7 +102,7 @@ describe('exportsFromDirectory', () => {
                 fileExcludePatterns: ['*.sublime-workspace', 'ignored-*'],
             };
             const result = await exportsFromDirectory({
-                directory: `${process.cwd()}/fixtures`,
+                directory: `${__dirname}/../fixtures`,
                 ...options,
             });
             assert.ok(

@@ -4,6 +4,7 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "importHelpers": true,
+    "jsx": "preserve",
     "strict": true,
     "strictNullChecks": true,
     "noImplicitAny": false,

@@ -1,4 +1,5 @@
 import assert from 'assert';
+import { resolve } from 'path';
 import { Project } from 'ts-morph';
 
 import { createProject } from './create-project';
@@ -7,7 +8,9 @@ function normalizeFileList(project: Project) {
     return project
         .getSourceFiles()
         .map((s) => s.getFilePath())
-        .map((path) => path.slice(process.cwd().length));
+        .map((path) => {
+            return path.slice(resolve(__dirname, '..').length);
+        });
 }
 
 describe('create-project', () => {
@@ -15,7 +18,7 @@ describe('create-project', () => {
     describe('checking files (cannot modify allowJS)', () => {
         it.skip('must include javascript with tsconfig', async () => {
             project = await createProject({
-                directory: `${process.cwd()}`,
+                directory: `${__dirname}/..`,
                 compilerOptions: {
                     allowJs: true,
                 },
@@ -53,7 +56,7 @@ describe('create-project', () => {
 
             it('ends with slash', async () => {
                 project = await createProject({
-                    directory: `${process.cwd()}/fixtures`,
+                    directory: `${__dirname}/../fixtures`,
                     folderExcludePatterns: ['fixtures/playground/'],
                 });
                 verify(project);
@@ -61,7 +64,7 @@ describe('create-project', () => {
 
             it('ends with single star', async () => {
                 project = await createProject({
-                    directory: 'fixtures',
+                    directory: `${__dirname}/../fixtures`,
                     folderExcludePatterns: ['playground/*'],
                 });
                 verify(project);
@@ -79,7 +82,7 @@ describe('create-project', () => {
 
             it('not ending slash', async () => {
                 project = await createProject({
-                    directory: 'fixtures',
+                    directory: `${__dirname}/../fixtures`,
                     folderExcludePatterns: ['fixtures/playground'],
                 });
                 verify(project);
@@ -87,7 +90,7 @@ describe('create-project', () => {
 
             it('folder name', async () => {
                 project = await createProject({
-                    directory: 'fixtures',
+                    directory: `${__dirname}/../fixtures`,
                     folderExcludePatterns: ['playground'],
                 });
                 verify(project);
@@ -96,7 +99,7 @@ describe('create-project', () => {
 
         it('one letter pattern', async () => {
             project = await createProject({
-                directory: `${process.cwd()}/fixtures`,
+                directory: `${__dirname}/../fixtures`,
                 folderExcludePatterns: ['f'],
             });
             result = normalizeFileList(project);
