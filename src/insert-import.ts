@@ -29,9 +29,7 @@ export function insertImport({
     const sourceFile = project.createSourceFile('0.ts', sourceFileContent, {
         overwrite: true,
     });
-    let importDeclarationIndex = 0;
     const importDeclaration = sourceFile.getImportDeclaration((importDeclaration) => {
-        importDeclarationIndex++;
         const literalValue = importDeclaration.getModuleSpecifier().getLiteralValue();
         return literalValue === declaration.specifier;
     });
@@ -48,7 +46,7 @@ export function insertImport({
             }
         }
     } else {
-        sourceFile.insertImportDeclaration(importDeclarationIndex, {
+        sourceFile.addImportDeclaration({
             defaultImport: declaration.isDefault ? declaration.name : undefined,
             namedImports: declaration.isDefault ? [] : [declaration.name],
             moduleSpecifier: declaration.specifier,
@@ -60,8 +58,8 @@ export function insertImport({
 
 /**
  * Find index for {name} to insert to keep array sorted.
- * @param {string}   name
- * @param {string[]} array Sorted array
+ * @param name
+ * @param array Sorted array
  */
 export function findInsertIndex(name: string, array: string[]) {
     let result = 0;
