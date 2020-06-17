@@ -36,18 +36,12 @@ export function insertImport({
         return literalValue === declaration.specifier;
     });
     if (importDeclaration) {
-        const namedImports = importDeclaration.getNamedImports();
-        const importSpecifier = namedImports.find(
-            (importSpecifier) => importSpecifier.getName() === declaration.name,
-        );
-        if (!importSpecifier) {
+        const namedImports = importDeclaration.getNamedImports().map((x) => x.getName());
+        if (!namedImports.some((name) => name === declaration.name)) {
             if (declaration.isDefault) {
                 importDeclaration.setDefaultImport(declaration.name);
             } else if (sorted) {
-                const index = findInsertIndex(
-                    declaration.name,
-                    namedImports.map((x) => x.getName()),
-                );
+                const index = findInsertIndex(declaration.name, namedImports);
                 importDeclaration.insertNamedImport(index, declaration.name);
             } else {
                 importDeclaration.addNamedImport(declaration.name);

@@ -2,7 +2,7 @@ import assert from 'assert';
 import { stripIndent, stripIndents } from 'common-tags';
 import { QuoteKind } from 'ts-morph';
 
-import { insertImport, findInsertIndex } from './insert-import';
+import { findInsertIndex, insertImport } from './insert-import';
 
 describe('insert import', () => {
     it('new import statement', () => {
