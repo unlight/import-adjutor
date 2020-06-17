@@ -30,6 +30,7 @@ args:
     declaration: Declaration;
     sourceFileContent: string;
     manipulationSettings?: Partial<ManipulationSettings>;
+    sorted: boolean = false;
 type Declaration = {
     name: string;
     specifier: string;

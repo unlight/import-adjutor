@@ -12,10 +12,12 @@ export function insertImport({
     declaration,
     sourceFileContent,
     manipulationSettings,
+    sorted = false,
 }: {
     declaration: Declaration;
     sourceFileContent: string;
     manipulationSettings?: Partial<ManipulationSettings>;
+    sorted?: boolean;
 }) {
     const project = new Project({
         useInMemoryFileSystem: true,
@@ -34,13 +36,22 @@ export function insertImport({
         return literalValue === declaration.specifier;
     });
     if (importDeclaration) {
-        const importSpecifier = importDeclaration
-            .getNamedImports()
-            .find((importSpecifier) => importSpecifier.getName() === declaration.name);
+        const namedImports = importDeclaration.getNamedImports();
+        const importSpecifier = namedImports.find(
+            (importSpecifier) => importSpecifier.getName() === declaration.name,
+        );
         if (!importSpecifier) {
-            declaration.isDefault
-                ? importDeclaration.setDefaultImport(declaration.name)
-                : importDeclaration.addNamedImport(declaration.name);
+            if (declaration.isDefault) {
+                importDeclaration.setDefaultImport(declaration.name);
+            } else if (sorted) {
+                const index = findInsertIndex(
+                    declaration.name,
+                    namedImports.map((x) => x.getName()),
+                );
+                importDeclaration.insertNamedImport(index, declaration.name);
+            } else {
+                importDeclaration.addNamedImport(declaration.name);
+            }
         }
     } else {
         sourceFile.insertImportDeclaration(importDeclarationIndex, {
@@ -51,4 +62,20 @@ export function insertImport({
     }
 
     return sourceFile.getFullText();
+}
+
+/**
+ * Find index for {name} to insert to keep array sorted.
+ * @param {string}   name
+ * @param {string[]} array Sorted array
+ */
+export function findInsertIndex(name: string, array: string[]) {
+    let result = 0;
+    for (let value of array) {
+        if (value > name) {
+            break;
+        }
+        result++;
+    }
+    return result;
 }

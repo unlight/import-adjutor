@@ -2,7 +2,7 @@ import assert from 'assert';
 import { stripIndent, stripIndents } from 'common-tags';
 import { QuoteKind } from 'ts-morph';
 
-import { insertImport } from './insert-import';
+import { insertImport, findInsertIndex } from './insert-import';
 
 describe('insert import', () => {
     it('new import statement', () => {
@@ -121,5 +121,39 @@ describe('insert import', () => {
             manipulationSettings: { quoteKind: QuoteKind.Double } as any,
         });
         assert.equal(result, `import { rename } from "fs";\n`);
+    });
+
+    it('findInsertIndex 1', () => {
+        const index = findInsertIndex('n', ['a', 'z']);
+        assert.equal(index, 1);
+    });
+
+    it('findInsertIndex 2', () => {
+        const index = findInsertIndex('n', ['a', 'b', 'c']);
+        assert.equal(index, 3);
+    });
+
+    it('findInsertIndex f', () => {
+        const index = findInsertIndex('f', ['a', 'b', 'z']);
+        assert.equal(index, 2);
+    });
+
+    it('sorted insert import', () => {
+        const result = insertImport({
+            sorted: true,
+            sourceFileContent: stripIndents`
+            import { a, f } from 'z';
+            `,
+            declaration: {
+                name: 'b',
+                specifier: 'z',
+            },
+        });
+        assert.equal(
+            result,
+            stripIndents`
+            import { a, b, f } from 'z';
+        `,
+        );
     });
 });
