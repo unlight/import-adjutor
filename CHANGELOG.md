@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/unlight/import-adjutor/compare/v2.0.0...v2.1.0) (2020-06-17)
+
+
+### Features
+
+* Sorted import for insertImport ([b7a2a21](https://github.com/unlight/import-adjutor/commit/b7a2a2175c3508b624a580efdb18d4f5baa6fda3))
+
 # [2.0.0](https://github.com/unlight/import-adjutor/compare/v1.2.0...v2.0.0) (2020-06-12)
 
 
