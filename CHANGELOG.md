@@ -1,3 +1,10 @@
+## [2.1.1](https://github.com/unlight/import-adjutor/compare/v2.1.0...v2.1.1) (2020-06-17)
+
+
+### Performance Improvements
+
+* Removed unused code ([14328ca](https://github.com/unlight/import-adjutor/commit/14328cabb1b11498c21ba86524533a910419fc8c))
+
 # [2.1.0](https://github.com/unlight/import-adjutor/compare/v2.0.0...v2.1.0) (2020-06-17)
 
 
