@@ -67,4 +67,17 @@ describe('cli', () => {
         assert(result.filter((entry) => entry.module === '@nestjs/graphql').length > 0);
         assert(result.find((entry) => entry.name === 'ID'));
     });
+
+    it('nestjs app sources', async () => {
+        const directory = resolve(`${__dirname}/../fixtures/nestjs-app`);
+        const result = createExecSync({
+            input: {
+                command: 'exportsFromDirectory',
+                args: {
+                    directory,
+                },
+            },
+        });
+        assert(result.find((entry) => entry.name === 'nestAppConst'));
+    });
 });
