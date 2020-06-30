@@ -1,3 +1,10 @@
+## [2.1.2](https://github.com/unlight/import-adjutor/compare/v2.1.1...v2.1.2) (2020-06-30)
+
+
+### Bug Fixes
+
+* Get missed defaults https://stackoverflow.com/q/62542546 ([c636b9c](https://github.com/unlight/import-adjutor/commit/c636b9c1f958ece60ea8f36c6535c58765e942e3))
+
 ## [2.1.1](https://github.com/unlight/import-adjutor/compare/v2.1.0...v2.1.1) (2020-06-17)
 
 
