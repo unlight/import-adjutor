@@ -1,5 +1,4 @@
 import assert from 'assert';
-import { resolve } from 'path';
 
 import { createProject } from './create-project';
 import { Entry } from './entry';
@@ -53,6 +52,34 @@ describe('nodeModules', () => {
 
         it('angualr core testing submodule', () => {
             assert(result.find((entry) => entry.module === '@angular/core/testing'));
+        });
+
+        it('resolve from path', () => {
+            assert(result.find((entry) => entry.module === 'path' && entry.name === 'resolve'));
+        });
+
+        it('no duplicates', () => {
+            const count1 = result.length;
+            const count2 = new Set(result.map((entry) => entry.id())).size;
+            assert.equal(count1, count2);
+        });
+
+        it('find duplicate', () => {
+            const count = new Map<string, number>();
+            for (const entry of result) {
+                const id = entry.id();
+                let value = count.get(id);
+                if (!value) {
+                    value = 0;
+                }
+                value++;
+                count.set(id, value);
+            }
+            for (const [id, number] of count.entries()) {
+                if (number > 1) {
+                    assert.fail(`Found duplicate ${id}`);
+                }
+            }
         });
 
         describe('unknown default should not be in result', () => {
