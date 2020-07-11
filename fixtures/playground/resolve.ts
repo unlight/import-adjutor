@@ -1,4 +1,4 @@
-import resolve from 'resolve';
+// import resolve from 'resolve';
 import { promisify } from 'util';
 
 // resolve('@types/pkg-dir', resolveOptions, (err, res) => {
