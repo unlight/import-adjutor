@@ -81,7 +81,7 @@
     "preact": "10.4.5",
     "prettier": "^2.0.5",
     "react": "^16.13.1",
-    "react-native": "^0.63.0",
+    "react-native": "^0.62.3",
     "rxjs": "^6.6.0",
     "semantic-release": "^17.1.1",
     "ts-node": "^8.10.2",
