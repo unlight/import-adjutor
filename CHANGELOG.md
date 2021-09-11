@@ -1,3 +1,10 @@
+## [2.2.0](https://github.com/unlight/import-adjutor/compare/v2.1.2...v2.2.0) (2021-09-11)
+
+
+### Features
+
+* `noSemicolon' setting ([703aa7d](https://github.com/unlight/import-adjutor/commit/703aa7d7b48e1dc4e84de6765129422b93ab14a5))
+
 ## [2.1.2](https://github.com/unlight/import-adjutor/compare/v2.1.1...v2.1.2) (2020-06-30)
 
 
