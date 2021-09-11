@@ -1,6 +1,7 @@
 import assert from 'assert';
 import { execSync, SpawnSyncReturns } from 'child_process';
 import { resolve } from 'path';
+import expect from 'expect';
 
 import { insertImport } from './insert-import';
 
@@ -21,7 +22,7 @@ describe('cli', () => {
             const result = createExecSync({ input: {} });
             assert.fail('empty command should fail');
         } catch (_) {
-            const error: SpawnSyncReturns<string> = _;
+            const error = _ as SpawnSyncReturns<string>;
             assert(error.stderr.includes('Error: Empty command'));
             assert.notEqual(error.status, 0);
         }
@@ -32,7 +33,7 @@ describe('cli', () => {
             const result = createExecSync({ input: { command: 'foo' } });
             assert.fail('empty command should fail');
         } catch (_) {
-            const error: SpawnSyncReturns<string> = _;
+            const error = _ as SpawnSyncReturns<string>;
             assert(error.stderr.includes('Error: Unknown command'));
             assert.notEqual(error.status, 0);
         }
@@ -64,8 +65,8 @@ describe('cli', () => {
                 },
             },
         });
-        assert(result.filter((entry) => entry.module === '@nestjs/graphql').length > 0);
-        assert(result.find((entry) => entry.name === 'ID'));
+        expect(result.some(entry => entry.module === '@nestjs/graphql')).toBeTruthy();
+        expect(result.find(entry => entry.name === 'ID')).toBeTruthy();
     });
 
     it('nestjs app sources', async () => {
@@ -78,6 +79,6 @@ describe('cli', () => {
                 },
             },
         });
-        assert(result.find((entry) => entry.name === 'nestAppConst'));
+        assert(result.find(entry => entry.name === 'nestAppConst'));
     });
 });

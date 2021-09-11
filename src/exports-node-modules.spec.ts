@@ -1,6 +1,5 @@
-import assert from 'assert';
+import expect from 'expect';
 
-import { createProject } from './create-project';
 import { Entry } from './entry';
 import { exportsNodeModules } from './exports-node-modules';
 
@@ -13,55 +12,58 @@ describe('nodeModules', () => {
         });
 
         it('node modules should exists', () => {
-            assert(result.length > 0);
+            expect(result.length).toBeGreaterThan(0);
         });
 
         it('fs module', () => {
-            assert(result.find((entry) => entry.module == 'fs'));
+            expect(result.find(entry => entry.module == 'fs')).toBeTruthy();
         });
 
         it('React default', () => {
-            assert(
+            expect(
                 result.find(
-                    (entry) =>
-                        entry.name === 'React' && entry.module === 'react' && entry.isDefault,
+                    entry =>
+                        entry.name === 'React' &&
+                        entry.module === 'react' &&
+                        entry.isDefault,
                 ),
-            );
-        });
-
-        it('preact default', () => {
-            assert(
-                result.find(
-                    (entry) =>
-                        entry.name === 'preact' && entry.module === 'preact' && entry.isDefault,
-                ),
-            );
+            ).toBeTruthy();
         });
 
         it('type zoo', () => {
-            assert(result.filter((entry) => entry.module === 'type-zoo').length > 0);
+            expect(result.some(entry => entry.module === 'type-zoo')).toBeTruthy();
         });
 
         it('type zoo default should not exists', () => {
-            assert(!result.find((entry) => entry.module === 'type-zoo' && entry.isDefault));
+            expect(
+                !result.some(entry => entry.module === 'type-zoo' && entry.isDefault),
+            ).toBeTruthy();
         });
 
         it('angualr material submodule', () => {
-            assert(result.find((entry) => entry.module === '@angular/material/datepicker'));
+            expect(
+                result.find(entry => entry.module === '@angular/material/datepicker'),
+            ).toBeTruthy();
         });
 
         it('angualr core testing submodule', () => {
-            assert(result.find((entry) => entry.module === '@angular/core/testing'));
+            expect(
+                result.find(entry => entry.module === '@angular/core/testing'),
+            ).toBeTruthy();
         });
 
         it('resolve from path', () => {
-            assert(result.find((entry) => entry.module === 'path' && entry.name === 'resolve'));
+            expect(
+                result.find(
+                    entry => entry.module === 'path' && entry.name === 'resolve',
+                ),
+            ).toBeTruthy();
         });
 
         it('no duplicates', () => {
             const count1 = result.length;
-            const count2 = new Set(result.map((entry) => entry.id())).size;
-            assert.equal(count1, count2);
+            const count2 = new Set(result.map(entry => entry.id())).size;
+            expect(count1).toEqual(count2);
         });
 
         it('find duplicate', () => {
@@ -77,26 +79,25 @@ describe('nodeModules', () => {
             }
             for (const [id, number] of count.entries()) {
                 if (number > 1) {
-                    assert.fail(`Found duplicate ${id}`);
+                    throw new Error(`Found duplicate ${id}`);
                 }
             }
         });
 
         describe('unknown default should not be in result', () => {
             it('match', () => {
-                assert.deepEqual(
+                expect(
                     result.filter(
-                        (entry) => entry.module === 'picomatch' && entry.name === 'unknown',
+                        entry =>
+                            entry.module === 'picomatch' && entry.name === 'unknown',
                     ),
-                    [],
-                );
+                ).toEqual([]);
             });
 
             it('every default', () => {
-                assert.deepEqual(
-                    result.filter((entry) => entry.name === 'unknown' && entry.isDefault),
-                    [],
-                );
+                expect(
+                    result.filter(entry => entry.name === 'unknown' && entry.isDefault),
+                ).toEqual([]);
             });
         });
     });

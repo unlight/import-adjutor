@@ -9,8 +9,8 @@ describe('exportsFromDirectory', () => {
     function normalizeFileList(project: Project) {
         return project
             .getSourceFiles()
-            .map((s) => s.getFilePath())
-            .map((path) => path.slice(process.cwd().length));
+            .map(s => s.getFilePath())
+            .map(path => path.slice(process.cwd().length));
     }
 
     describe('memory file system', () => {
@@ -22,14 +22,18 @@ describe('exportsFromDirectory', () => {
                     esModuleInterop: true,
                 },
                 skipFileDependencyResolution: true,
-                addFilesFromTsConfig: false,
+                skipAddingFilesFromTsConfig: true,
                 useInMemoryFileSystem: true,
             });
         });
 
         it('files in directory', async () => {
-            project.createSourceFile('/src/source1.ts', `export const foo1 = 1`).saveSync();
-            project.createSourceFile('/src/source2.tsx', `export const foo2 = 2`).saveSync();
+            project
+                .createSourceFile('/src/source1.ts', `export const foo1 = 1`)
+                .saveSync();
+            project
+                .createSourceFile('/src/source2.tsx', `export const foo2 = 2`)
+                .saveSync();
             const result = await exportsFromDirectory({ project, directory: '/src' });
             assert.deepStrictEqual(result, [
                 new Entry({
@@ -44,7 +48,9 @@ describe('exportsFromDirectory', () => {
         });
 
         it('in sub directory', async () => {
-            project.createSourceFile('/src/source1.ts', `export const foo1 = 1`).saveSync();
+            project
+                .createSourceFile('/src/source1.ts', `export const foo1 = 1`)
+                .saveSync();
             project
                 .createSourceFile('/src/subdir1/source3.tsx', `export const foo3 = 3`)
                 .saveSync();
@@ -88,8 +94,11 @@ describe('exportsFromDirectory', () => {
 
     describe('real file system', () => {
         it('real subdirectories', async () => {
-            const result = (await exportsFromDirectory({ directory: 'fixtures' })).find((entry) =>
-                entry.filepath!.endsWith('fixtures/subdirectory/subdirectory-file.ts'),
+            const result = (await exportsFromDirectory({ directory: 'fixtures' })).find(
+                entry =>
+                    entry.filepath!.endsWith(
+                        'fixtures/subdirectory/subdirectory-file.ts',
+                    ),
             );
             assert(result);
             assert.equal(result.name, 'subdirectoryFile');
@@ -107,8 +116,9 @@ describe('exportsFromDirectory', () => {
             });
             assert.ok(
                 !result.find(
-                    (entry) =>
-                        entry.filepath && entry.filepath.endsWith('fixtures/ignored-file.ts'),
+                    entry =>
+                        entry.filepath &&
+                        entry.filepath.endsWith('fixtures/ignored-file.ts'),
                 ),
             );
         });
@@ -124,7 +134,7 @@ describe('exportsFromDirectory', () => {
 
             assert.ok(
                 !result.find(
-                    (entry) =>
+                    entry =>
                         entry.filepath &&
                         entry.filepath.endsWith('ignored-directory/ignored-file.ts'),
                 ),
@@ -133,8 +143,9 @@ describe('exportsFromDirectory', () => {
 
             assert.ok(
                 !result.find(
-                    (entry) =>
-                        entry.filepath && entry.filepath.endsWith('fixtures/.svn/ignored-file.ts'),
+                    entry =>
+                        entry.filepath &&
+                        entry.filepath.endsWith('fixtures/.svn/ignored-file.ts'),
                 ),
                 'folder equal name should be ignored',
             );
@@ -144,14 +155,14 @@ describe('exportsFromDirectory', () => {
             const result = await exportsFromDirectory({
                 directory: 'fixtures/second-folder',
             });
-            assert(result.find((entry) => entry.name === 'secondFolderFile'));
+            assert(result.find(entry => entry.name === 'secondFolderFile'));
         });
 
         it('tsx file', async () => {
             const result = await exportsFromDirectory({
                 directory: 'fixtures/playground',
             });
-            assert(result.find((entry) => entry.name === 'TsxComp'));
+            assert(result.find(entry => entry.name === 'TsxComp'));
         });
     });
 });

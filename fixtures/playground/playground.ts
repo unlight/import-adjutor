@@ -1,13 +1,11 @@
-import { Project, SymbolFlags } from 'ts-morph';
-import { inspect } from 'util';
-import { ScriptTarget, ModuleKind, ModuleResolutionKind } from 'typescript';
+import { Project } from 'ts-morph';
 
 const project = new Project({
     compilerOptions: {
         esModuleInterop: true,
     },
     skipFileDependencyResolution: true,
-    addFilesFromTsConfig: false,
+    skipAddingFilesFromTsConfig: true,
     // useInMemoryFileSystem: true,
 });
 

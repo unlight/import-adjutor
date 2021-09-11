@@ -1,5 +1,6 @@
 import assert from 'assert';
-import { stripIndent, stripIndents } from 'common-tags';
+import expect from 'expect';
+import { stripIndents } from 'common-tags';
 import { QuoteKind } from 'ts-morph';
 
 import { findInsertIndex, insertImport } from './insert-import';
@@ -13,7 +14,7 @@ describe('insert import', () => {
                 specifier: 'fs',
             },
         });
-        assert.equal(result, `import { rename } from 'fs';\n`);
+        expect(result).toEqual(`import { rename } from 'fs';\n`);
     });
 
     it('new import as default', () => {
@@ -84,7 +85,10 @@ describe('insert import', () => {
                 specifier: 'y',
             },
         });
-        assert.equal(result, `#!/usr/bin/env node\nimport { a } from 'b';\nimport x from 'y';\n`);
+        assert.equal(
+            result,
+            `#!/usr/bin/env node\nimport { a } from 'b';\nimport x from 'y';\n`,
+        );
     });
 
     it('content after imports should be kept', () => {
@@ -156,4 +160,15 @@ describe('insert import', () => {
         `,
         );
     });
+
+    // it.only('new import without semicolon', () => {
+    //     const result = insertImport({
+    //         sourceFileContent: ``,
+    //         declaration: {
+    //             name: 'rename',
+    //             specifier: 'fs',
+    //         },
+    //     });
+    //     expect(result).toEqual(`import { rename } from 'fs'\n`);
+    // });
 });

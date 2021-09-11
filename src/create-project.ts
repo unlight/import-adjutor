@@ -1,5 +1,5 @@
 import globrex from 'globrex';
-import { basename, relative , resolve } from 'path';
+import { basename, relative, resolve } from 'path';
 import picomatch from 'picomatch';
 import { CompilerOptions, FileSystemHost, Project, ProjectOptions } from 'ts-morph';
 
@@ -25,13 +25,13 @@ export async function createProject({
             ...compilerOptions,
         },
         skipFileDependencyResolution: true,
-        addFilesFromTsConfig: false,
+        skipAddingFilesFromTsConfig: true,
         ...projectOptions,
     });
 
     const fs = project.getFileSystem();
     const directoryFiles = fs.readDirSync(directory);
-    const config = directoryFiles.find((file) => {
+    const config = directoryFiles.find(file => {
         return file.endsWith('/tsconfig.json') || file.endsWith('/jsconfig.json');
     });
     if (config) {
@@ -69,8 +69,11 @@ async function walkDirectoryFiles({
     _fileExcludeMatcher?: ReturnType<typeof createFileMatcher>;
 }) {
     for (const file of directoryFiles) {
-        if (extensions.find((extension) => file.endsWith(extension))) {
-            if (_fileExcludeMatcher && _fileExcludeMatcher.some((matcher) => matcher(file))) {
+        if (extensions.find(extension => file.endsWith(extension))) {
+            if (
+                _fileExcludeMatcher &&
+                _fileExcludeMatcher.some(matcher => matcher(file))
+            ) {
                 continue;
             }
             try {
@@ -80,7 +83,7 @@ async function walkDirectoryFiles({
             if (
                 _folderExcludeMatcher &&
                 _folderExcludeMatcher.some(
-                    (matcher) =>
+                    matcher =>
                         matcher.ends(file) ||
                         matcher.regex.test(file) ||
                         matcher.contains.test(file) ||
@@ -112,7 +115,7 @@ async function walkDirectoryFiles({
 function createFolderExcludeMatcher(patterns: string[]) {
     patterns = (patterns || []).concat(defaultExcludeFolders);
     patterns = [...new Set(patterns).values()];
-    return patterns.map((pattern) => {
+    return patterns.map(pattern => {
         const contains = `*/${pattern}/*`
             .replace('//', '/')
             .replace('/*/*', '/*')
@@ -128,6 +131,6 @@ function createFolderExcludeMatcher(patterns: string[]) {
 
 function createFileMatcher(patterns?: string[]) {
     if (patterns) {
-        return patterns.map((pattern) => picomatch(pattern, { matchBase: true } as any));
+        return patterns.map(pattern => picomatch(pattern, { matchBase: true } as any));
     }
 }

@@ -8,9 +8,7 @@ module.exports = {
     parserOptions: {
         ecmaVersion: 2020,
         sourceType: 'module',
-        ecmaFeatures: {
-            jsx: true,
-        },
+        ecmaFeatures: {},
         project: 'tsconfig.json',
         warnOnUnsupportedTypeScriptVersion: false,
     },
@@ -22,9 +20,10 @@ module.exports = {
         'no-dupe-class-members': 0,
         'unicorn/import-index': 0,
         'unicorn/catch-error-name': 0,
+        'unicorn/prefer-node-protocol': 0,
+        'unicorn/prefer-module': 0,
         'unicorn/prevent-abbreviations': 1,
         'unicorn/prefer-includes': 1,
-        'simple-import-sort/sort': 1,
         'sort-imports': 0,
         'import/order': 0,
         'import/first': 1,
