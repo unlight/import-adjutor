@@ -1,4 +1,3 @@
-import assert from 'assert';
 import expect from 'expect';
 import { stripIndents } from 'common-tags';
 import { QuoteKind } from 'ts-morph';
@@ -26,7 +25,7 @@ describe('insert import', () => {
                 specifier: 'react',
             },
         });
-        assert.equal(result, `import React from 'react';\n`);
+        expect(result).toEqual(`import React from 'react';\n`);
     });
 
     it('named import to named', () => {
@@ -37,7 +36,7 @@ describe('insert import', () => {
                 specifier: 'fs',
             },
         });
-        assert.equal(result, `import { rename, copy } from 'fs';\n`);
+        expect(result).toEqual(`import { rename, copy } from 'fs';\n`);
     });
 
     it('named import to default', () => {
@@ -48,7 +47,7 @@ describe('insert import', () => {
                 specifier: 'fs',
             },
         });
-        assert.equal(result, `import fs, { sync } from 'fs';\n`);
+        expect(result).toEqual(`import fs, { sync } from 'fs';\n`);
     });
 
     it('duplicate should not be ignored', () => {
@@ -59,7 +58,7 @@ describe('insert import', () => {
                 specifier: 'fs',
             },
         });
-        assert.equal(result, `import { rename } from 'fs';\n`);
+        expect(result).toEqual(`import { rename } from 'fs';\n`);
     });
 
     it('multiple string import', () => {
@@ -70,7 +69,7 @@ describe('insert import', () => {
                 specifier: 'fs',
             },
         });
-        assert.equal(result, `import { copy,\nrename, sync } from 'fs';\n`);
+        expect(result).toEqual(`import { copy,\nrename, sync } from 'fs';\n`);
     });
 
     it('shebang should be kept', () => {
@@ -85,8 +84,7 @@ describe('insert import', () => {
                 specifier: 'y',
             },
         });
-        assert.equal(
-            result,
+        expect(result).toEqual(
             `#!/usr/bin/env node\nimport { a } from 'b';\nimport x from 'y';\n`,
         );
     });
@@ -104,15 +102,12 @@ describe('insert import', () => {
                 specifier: 'y',
             },
         });
-        assert.equal(
-            result,
-            stripIndents`
+        expect(result).toEqual(stripIndents`
             import { a } from 'b';
             import x from 'y';
 
             const c = 1;
-        `,
-        );
+        `);
     });
 
     it('manipulationSettings quoteKind', () => {
@@ -124,22 +119,22 @@ describe('insert import', () => {
             },
             manipulationSettings: { quoteKind: QuoteKind.Double } as any,
         });
-        assert.equal(result, `import { rename } from "fs";\n`);
+        expect(result).toEqual(`import { rename } from "fs";\n`);
     });
 
     it('findInsertIndex 1', () => {
         const index = findInsertIndex('n', ['a', 'z']);
-        assert.equal(index, 1);
+        expect(index).toEqual(1);
     });
 
     it('findInsertIndex 2', () => {
         const index = findInsertIndex('n', ['a', 'b', 'c']);
-        assert.equal(index, 3);
+        expect(index).toEqual(3);
     });
 
     it('findInsertIndex f', () => {
         const index = findInsertIndex('f', ['a', 'b', 'z']);
-        assert.equal(index, 2);
+        expect(index).toEqual(2);
     });
 
     it('sorted insert import', () => {
@@ -153,22 +148,38 @@ describe('insert import', () => {
                 specifier: 'z',
             },
         });
-        assert.equal(
-            result,
+        expect(result).toEqual(
             stripIndents`
             import { a, b, f } from 'z';
         `,
         );
     });
 
-    // it.only('new import without semicolon', () => {
-    //     const result = insertImport({
-    //         sourceFileContent: ``,
-    //         declaration: {
-    //             name: 'rename',
-    //             specifier: 'fs',
-    //         },
-    //     });
-    //     expect(result).toEqual(`import { rename } from 'fs'\n`);
-    // });
+    it('new import without semicolon', () => {
+        const result = insertImport({
+            sourceFileContent: ``,
+            declaration: {
+                name: 'rename',
+                specifier: 'fs',
+            },
+            manipulationSettings: {
+                noSemicolon: true,
+            },
+        });
+        expect(result).toEqual(`import { rename } from 'fs'\n`);
+    });
+
+    it('exists import without semicolon', () => {
+        const result = insertImport({
+            sourceFileContent: `import { rename } from 'fs';\n`,
+            declaration: {
+                name: 'sync',
+                specifier: 'fs',
+            },
+            manipulationSettings: {
+                noSemicolon: true,
+            },
+        });
+        expect(result).toEqual(`import { rename, sync } from 'fs'\n`);
+    });
 });

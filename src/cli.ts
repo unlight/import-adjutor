@@ -18,15 +18,15 @@ const pushd = (directory: string, cwd = process.cwd()) => {
     if (!command) {
         throw new Error('Empty command');
     }
-    const func = commands.find((cmd) => cmd.name === command);
-    if (!func) {
+    const function_ = commands.find((cmd) => cmd.name === command);
+    if (!function_) {
         throw new Error(`Unknown command ${String(command)}`);
     }
     let popd: ReturnType<typeof pushd> | undefined;
     if (args && args.directory) {
         popd = pushd(args.directory);
     }
-    const output = await func(args);
+    const output = await function_(args);
     if (popd) {
         popd();
     }

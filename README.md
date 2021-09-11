@@ -29,7 +29,7 @@ command: 'insertImport';
 args:
     declaration: Declaration;
     sourceFileContent: string;
-    manipulationSettings?: Partial<ManipulationSettings>;
+    manipulationSettings?: Partial<ManipulationSettings> & { noSemicolon?: boolean };
     sorted: boolean = false;
 type Declaration = {
     name: string;

@@ -1,6 +1,5 @@
-import { FileSystemHost, Node, Project } from 'ts-morph';
+import { Project } from 'ts-morph';
 
-import { extensions } from './constants';
 import { createProject } from './create-project';
 import { Entry } from './entry';
 import { sourcefileDefaultExports } from './sourcefile-default-exports';
@@ -19,7 +18,12 @@ export async function exportsFromDirectory({
     project,
 }: Arguments) {
     project =
-        project ?? (await createProject({ directory, folderExcludePatterns, fileExcludePatterns }));
+        project ??
+        (await createProject({
+            directory,
+            folderExcludePatterns,
+            fileExcludePatterns,
+        }));
     const result: Entry[] = [];
     for (let sourceFile of project.getSourceFiles()) {
         const filepath = sourceFile.getFilePath();

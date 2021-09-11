@@ -18,7 +18,12 @@ export async function exportsNodeModules({
     fileExcludePatterns,
 }: Arguments): Promise<Entry[]> {
     project =
-        project ?? (await createProject({ directory, folderExcludePatterns, fileExcludePatterns }));
+        project ??
+        (await createProject({
+            directory,
+            folderExcludePatterns,
+            fileExcludePatterns,
+        }));
     const program = project.getProgram();
     const typeChecker = program.getTypeChecker();
     const entries = new Map<string, Entry>();
@@ -51,7 +56,7 @@ export async function exportsNodeModules({
         }
         nodeModules = nodeModules.concat(
             Object.keys({ ...dependencies, ...devDependencies }).filter(
-                (name) => !name.startsWith('@types/'),
+                name => !name.startsWith('@types/'),
             ),
         );
     }
@@ -67,7 +72,10 @@ export async function exportsNodeModules({
         if (defaultImport) {
             const defaultImportType = defaultImport.getType();
             for (const property of defaultImportType.getProperties()) {
-                const entry = new Entry({ name: property.getName(), module: moduleName });
+                const entry = new Entry({
+                    name: property.getName(),
+                    module: moduleName,
+                });
                 entries.set(entry.id(), entry);
             }
         }

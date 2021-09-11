@@ -1,10 +1,12 @@
-import { ManipulationSettings, Project, QuoteKind } from 'ts-morph';
+import { ManipulationSettings, Node, Project, QuoteKind } from 'ts-morph';
 
 type Declaration = {
     name: string;
     specifier: string;
     isDefault?: boolean;
 };
+
+type InsertSettings = Partial<ManipulationSettings> & { noSemicolon?: boolean };
 
 export function insertImport({
     declaration,
@@ -14,7 +16,7 @@ export function insertImport({
 }: {
     declaration: Declaration;
     sourceFileContent: string;
-    manipulationSettings?: Partial<ManipulationSettings>;
+    manipulationSettings?: InsertSettings;
     sorted?: boolean;
 }) {
     const project = new Project({
@@ -27,7 +29,7 @@ export function insertImport({
     const sourceFile = project.createSourceFile('0.ts', sourceFileContent, {
         overwrite: true,
     });
-    const importDeclaration = sourceFile.getImportDeclaration(importDeclaration => {
+    let importDeclaration = sourceFile.getImportDeclaration(importDeclaration => {
         const literalValue = importDeclaration.getModuleSpecifier().getLiteralValue();
         return literalValue === declaration.specifier;
     });
@@ -44,11 +46,18 @@ export function insertImport({
             }
         }
     } else {
-        sourceFile.addImportDeclaration({
+        importDeclaration = sourceFile.addImportDeclaration({
             defaultImport: declaration.isDefault ? declaration.name : undefined,
             namedImports: declaration.isDefault ? [] : [declaration.name],
             moduleSpecifier: declaration.specifier,
         });
+    }
+
+    if (manipulationSettings?.noSemicolon) {
+        const lastToken = importDeclaration.getLastToken();
+        if (Node.isSemicolonToken(lastToken)) {
+            lastToken.replaceWithText('');
+        }
     }
 
     return sourceFile.getFullText();
