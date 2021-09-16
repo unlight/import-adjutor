@@ -6,7 +6,9 @@ type Declaration = {
     isDefault?: boolean;
 };
 
-type InsertSettings = Partial<ManipulationSettings> & { noSemicolon?: boolean };
+type InsertSettings = Partial<ManipulationSettings> & {
+    noSemicolon?: boolean;
+};
 
 export function insertImport({
     declaration,

@@ -182,4 +182,18 @@ describe('insert import', () => {
         });
         expect(result).toEqual(`import { rename, sync } from 'fs'\n`);
     });
+
+    it('no space before brace', () => {
+        const result = insertImport({
+            sourceFileContent: ``,
+            declaration: {
+                name: 'sync',
+                specifier: 'fs',
+            },
+            manipulationSettings: {
+                insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces: false,
+            },
+        });
+        expect(result).toEqual(`import {sync} from 'fs';\n`);
+    });
 });

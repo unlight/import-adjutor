@@ -6,17 +6,16 @@ import expect from 'expect';
 import { insertImport } from './insert-import';
 
 const node = 'node -r ts-node/register/transpile-only';
+const createExecSync = ({ input }: { input: object }) => {
+    const result = execSync(`${node} ${__dirname}/cli.ts`, {
+        input: JSON.stringify(input),
+        encoding: 'utf8',
+        stdio: ['pipe', 'pipe', 'pipe'],
+    });
+    return JSON.parse(result);
+};
 
 describe('cli', () => {
-    const createExecSync = ({ input }: { input: object }) => {
-        const result = execSync(`${node} ${__dirname}/cli.ts`, {
-            input: JSON.stringify(input),
-            encoding: 'utf8',
-            stdio: ['pipe', 'pipe', 'pipe'],
-        });
-        return JSON.parse(result);
-    };
-
     it('empty command', () => {
         try {
             const result = createExecSync({ input: {} });
