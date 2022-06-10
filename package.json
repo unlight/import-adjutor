@@ -78,7 +78,7 @@
     "react": "^17.0.2",
     "react-native": "^0.65.1",
     "rxjs": "^7.3.0",
-    "semantic-release": "^17.4.7",
+    "semantic-release": "^19.0.3",
     "ts-node": "^10.2.1",
     "type-zoo": "3",
     "typescript": "^4.4.3",
